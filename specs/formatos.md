@@ -7,7 +7,7 @@
 | Tipo | lib |
 | Versão da spec | 0.2.0 |
 | Data | 2026-11-11 |
-| Estado | **rascunho autorado, não aprovado** — §3 a §6, §9 e §10 escritos a partir de `reference/tools/02-vynamp-converter.md` §1, §3 e §4 e das TASKs E18-02, E08-02 e E11-03. A aprovação é do mantenedor, por `GOVERNANCE.md` |
+| Estado | **rascunho autorado, não aprovado** — §3 a §6, §9 e §10 escritos a partir de `reference/tools/02-vynamp-converter.md` §1, §3 e §4 e das TASKs E21-10 a E21-16, E08-02 e E11-03. A aprovação é do mantenedor, por `GOVERNANCE.md` |
 | Dono | mantenedor do `vynamp-encode` |
 | Depende de | `vynamp-dsp` (opcional, feature `resample`) |
 | É dependido por | engine; converter |
@@ -102,13 +102,13 @@ Não há saída DSD. Entrada DSD chega ao encoder já convertida em PCM pelo cha
 
 | ID | Requisito | REQ de produto | TASK | Teste |
 |---|---|---|---|---|
-| FMT-REQ-01 | `validate` aceita exatamente a matriz de §3 e recusa qualquer combinação fora dela com `InvalidParams` nomeando o campo — planned (M3) | matriz de formatos | E18-02 | — (FMT-AC-01 planejado) |
-| FMT-REQ-02 | Redução de profundidade (ex.: 24→16) só é aceita com `degradation.confirmed = true` e aparece em `degradations` — planned (M3) | degradação explícita | E18-02 | — (FMT-AC-02 planejado) |
-| FMT-REQ-03 | Mudança de taxa de amostragem só é aceita com confirmação; o resampler é escolhido pelo `vynamp-encode` (feature `resample`) e registrado em `resampler` — planned (M3) | resample declarado | E18-02 | — (FMT-AC-03 planejado) |
-| FMT-REQ-04 | Mudança mono↔estéreo é explícita e exige `channel_gain_db` declarado — planned (M3) | canais explícitos | E18-02 | — (FMT-AC-04 planejado) |
-| FMT-REQ-05 | WAV float 32 nunca vira inteiro sem pedido explícito de `SampleFormat` inteiro com confirmação — planned (M3) | sem conversão implícita | E18-02 | — (FMT-AC-05 planejado) |
-| FMT-REQ-06 | `Format::is_lossy` é verdadeiro para Opus, MP3, AAC e Vorbis, e é a única fonte do rótulo lossy usado pelo converter — planned (M3) | rótulo honesto | E18-02, E08-02 | — (FMT-AC-06 planejado) |
-| FMT-REQ-07 | Não existe saída DSD: `Format` não tem variante DSF/DFF, e o pedido é recusado como erro de uso antes de chegar à lib — planned (M3) | sem DSD na saída | E18-02 | — (FMT-AC-07 planejado) |
+| FMT-REQ-01 | `validate` aceita exatamente a matriz de §3 e recusa qualquer combinação fora dela com `InvalidParams` nomeando o campo — planned (M3) | matriz de formatos | E21-10 | — (FMT-AC-01 planejado) |
+| FMT-REQ-02 | Redução de profundidade (ex.: 24→16) só é aceita com `degradation.confirmed = true` e aparece em `degradations` — planned (M3) | degradação explícita | E21-11 | — (FMT-AC-02 planejado) |
+| FMT-REQ-03 | Mudança de taxa de amostragem só é aceita com confirmação; o resampler é escolhido pelo `vynamp-encode` (feature `resample`) e registrado em `resampler` — planned (M3) | resample declarado | E21-12 | — (FMT-AC-03 planejado) |
+| FMT-REQ-04 | Mudança mono↔estéreo é explícita e exige `channel_gain_db` declarado — planned (M3) | canais explícitos | E21-13 | — (FMT-AC-04 planejado) |
+| FMT-REQ-05 | WAV float 32 nunca vira inteiro sem pedido explícito de `SampleFormat` inteiro com confirmação — planned (M3) | sem conversão implícita | E21-14 | — (FMT-AC-05 planejado) |
+| FMT-REQ-06 | `Format::is_lossy` é verdadeiro para Opus, MP3, AAC e Vorbis, e é a única fonte do rótulo lossy usado pelo converter — planned (M3) | rótulo honesto | E21-15, E08-02 | — (FMT-AC-06 planejado) |
+| FMT-REQ-07 | Não existe saída DSD: `Format` não tem variante DSF/DFF, e o pedido é recusado como erro de uso antes de chegar à lib — planned (M3) | sem DSD na saída | E21-16 | — (FMT-AC-07 planejado) |
 
 Os rótulos da coluna “REQ de produto” são descritivos; o ID de produto correspondente
 é o da TASK citada no backlog.
@@ -182,6 +182,6 @@ Limitação declarada não reprova a entrega; limitação omitida reprova.
 
 | Limitação | Efeito | Quem cobre |
 |---|---|---|
-| Nenhum tipo desta spec existe em `src/` | nenhum critério verificável hoje | E18-02 |
-| Sem a feature `resample`, toda mudança de taxa é recusada | build mínima só converte mantendo a taxa | decisão de build em E18-02 |
+| Nenhum tipo desta spec existe em `src/` | nenhum critério verificável hoje | E21-10 a E21-16 |
+| Sem a feature `resample`, toda mudança de taxa é recusada | build mínima só converte mantendo a taxa | decisão de build em E21-12 |
 | Opus codifica internamente a 48 kHz; outra taxa pedida passa por resample | o plano declara a mudança mesmo quando o usuário não pediu taxa | registrado em `degradations` |

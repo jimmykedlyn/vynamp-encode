@@ -7,7 +7,7 @@
 | Tipo | lib |
 | Versão da spec | 0.2.0 |
 | Data | 2026-11-11 |
-| Estado | **rascunho autorado, não aprovado** — §3 a §6, §9 e §10 escritos a partir de `reference/tools/02-vynamp-converter.md` §1 a §6 e das TASKs E18-02, E08-02, E11-03 e E10-03. A aprovação é do mantenedor, por `GOVERNANCE.md` |
+| Estado | **rascunho autorado, não aprovado** — §3 a §6, §9 e §10 escritos a partir de `reference/tools/02-vynamp-converter.md` §1 a §6 e das TASKs E21-01 a E21-09, E08-02, E11-03 e E10-03. A aprovação é do mantenedor, por `GOVERNANCE.md` |
 | Dono | mantenedor do `vynamp-encode` |
 | Depende de | `vynamp-dsp` (opcional, feature `resample`) |
 | É dependido por | engine; converter |
@@ -129,15 +129,15 @@ Regras de uso que fazem parte do contrato:
 
 | ID | Requisito | REQ de produto | TASK | Teste |
 |---|---|---|---|---|
-| ENCODE-REQ-01 | `vynamp-encode` é a única fonte de encoders do produto; o registry expõe cada formato como presente ou ausente nesta build, com nome e versão do encoder — planned (M3) | encoder registry | E18-02 | — (ENCODE-AC-01 planejado) |
-| ENCODE-REQ-02 | MP3 fica `Absent` quando o encoder não está na build, e pedir MP3 nesse caso é erro tipado, nunca troca silenciosa de formato — planned (M3) | política de codecs | E18-02, E11-03 | — (ENCODE-AC-02 planejado) |
-| ENCODE-REQ-03 | Formatos lossy declaram no contêiner o priming e o padding do encoder, de modo que um decoder conforme recupere exatamente `frames_in` amostras — planned (M3) | gapless na saída | E18-02 | — (ENCODE-AC-03 planejado) |
-| ENCODE-REQ-04 | O encoder não reamostra, não muda profundidade nem remixa canais por conta própria: qualquer degradação é pedida explicitamente nos `EncodeParams` e devolvida no resumo — planned (M3) | sem degradação silenciosa | E18-02 | — (ENCODE-AC-04 planejado) |
-| ENCODE-REQ-05 | Formatos lossless (WAV, AIFF, FLAC, ALAC) preservam as amostras: decodificar a saída devolve o PCM de entrada quantizado na profundidade pedida, bit a bit — planned (M3) | integridade lossless | E18-02, E10-03 | — (ENCODE-AC-05 planejado) |
-| ENCODE-REQ-06 | Cancelamento por `CancelToken` interrompe a sessão no próximo `write` ou durante `finish`, devolve `EncodeError::Cancelled` e não escreve mais nada no `sink` — planned (M3) | cancelamento | E18-02, E08-02 | — (ENCODE-AC-06 planejado) |
-| ENCODE-REQ-07 | Erro de I/O do `sink` (inclusive `StorageFull`) volta como `EncodeError::Io` com o `ErrorKind` original, sem `panic!` — planned (M3) | disco cheio | E08-02 | — (ENCODE-AC-07 planejado) |
-| ENCODE-REQ-08 | Metadados são reembutidos no contêiner de destino; campo que o contêiner não suporta aparece em `MetadataReport::dropped` com motivo, e falha de metadado não aborta o áudio — planned (M3) | metadados | E18-02 | — (ENCODE-AC-08 planejado) |
-| ENCODE-REQ-09 | O resumo marca `lossy = true` para Opus, MP3, AAC e Vorbis; nenhuma API do crate devolve rótulo hi-res ou lossless para saída lossy — planned (M3) | rótulo honesto | E18-02, E08-02 | — (ENCODE-AC-09 planejado) |
+| ENCODE-REQ-01 | `vynamp-encode` é a única fonte de encoders do produto; o registry expõe cada formato como presente ou ausente nesta build, com nome e versão do encoder — planned (M3) | encoder registry | E21-01 | — (ENCODE-AC-01 planejado) |
+| ENCODE-REQ-02 | MP3 fica `Absent` quando o encoder não está na build, e pedir MP3 nesse caso é erro tipado, nunca troca silenciosa de formato — planned (M3) | política de codecs | E21-02, E11-03 | — (ENCODE-AC-02 planejado) |
+| ENCODE-REQ-03 | Formatos lossy declaram no contêiner o priming e o padding do encoder, de modo que um decoder conforme recupere exatamente `frames_in` amostras — planned (M3) | gapless na saída | E21-03 | — (ENCODE-AC-03 planejado) |
+| ENCODE-REQ-04 | O encoder não reamostra, não muda profundidade nem remixa canais por conta própria: qualquer degradação é pedida explicitamente nos `EncodeParams` e devolvida no resumo — planned (M3) | sem degradação silenciosa | E21-04 | — (ENCODE-AC-04 planejado) |
+| ENCODE-REQ-05 | Formatos lossless (WAV, AIFF, FLAC, ALAC) preservam as amostras: decodificar a saída devolve o PCM de entrada quantizado na profundidade pedida, bit a bit — planned (M3) | integridade lossless | E21-05, E10-03 | — (ENCODE-AC-05 planejado) |
+| ENCODE-REQ-06 | Cancelamento por `CancelToken` interrompe a sessão no próximo `write` ou durante `finish`, devolve `EncodeError::Cancelled` e não escreve mais nada no `sink` — planned (M3) | cancelamento | E21-06, E08-02 | — (ENCODE-AC-06 planejado) |
+| ENCODE-REQ-07 | Erro de I/O do `sink` (inclusive `StorageFull`) volta como `EncodeError::Io` com o `ErrorKind` original, sem `panic!` — planned (M3) | disco cheio | E21-07, E08-02 | — (ENCODE-AC-07 planejado) |
+| ENCODE-REQ-08 | Metadados são reembutidos no contêiner de destino; campo que o contêiner não suporta aparece em `MetadataReport::dropped` com motivo, e falha de metadado não aborta o áudio — planned (M3) | metadados | E21-08 | — (ENCODE-AC-08 planejado) |
+| ENCODE-REQ-09 | O resumo marca `lossy = true` para Opus, MP3, AAC e Vorbis; nenhuma API do crate devolve rótulo hi-res ou lossless para saída lossy — planned (M3) | rótulo honesto | E21-09, E08-02 | — (ENCODE-AC-09 planejado) |
 
 Os rótulos da coluna “REQ de produto” são descritivos; o ID de produto correspondente
 é o da TASK citada no backlog.
@@ -164,7 +164,7 @@ quem os escreve, e o teste nasce vermelho antes da implementação.
 - Qualidade perceptual de cada encoder lossy: o relatório a declara como estimativa
   (`02-vynamp-converter.md` §4), e não há limiar de PEAQ/ViSQOL aqui.
 - Escolha de biblioteca de cada encoder (C nativa via FFI ou Rust puro): fica para a
-  TASK E18-02 e para o inventário de licenças de E11-03.
+  TASK E21-02, que decide o caminho do MP3, e para o inventário de licenças de E11-03.
 - Desempenho (tempo real × N): não há meta numérica até haver medição no perfil de
   referência.
 
@@ -213,7 +213,7 @@ Depende de: `vynamp-dsp` (opcional, feature `resample`)
 
 | Fixture | Origem | Uso |
 |---|---|---|
-| `sine-24-stereo.flac` (48 kHz, 24 bits, 2 canais, 4 800 frames) | fixture do umbrella já citado em E18-02 | AC-05, AC-08 |
+| `sine-24-stereo.flac` (48 kHz, 24 bits, 2 canais, 4 800 frames) | fixture do umbrella, hoje em `libs/decode/crates/vynamp-decode-flac/tests/fixtures/` | AC-05, AC-08 |
 | seno 1 kHz 48 kHz estéreo, 48 000 frames | gerado no teste | AC-03, AC-06 |
 | `sink` que falha com `StorageFull` | `std::io::Write` de teste | AC-07 |
 
@@ -234,7 +234,7 @@ Limitação declarada não reprova a entrega; limitação omitida reprova.
 
 | Limitação | Efeito | Quem cobre |
 |---|---|---|
-| `src/lib.rs` hoje é só `pub const VERSION`; nenhum encoder existe | nenhum critério desta spec pode ser verificado ainda | E18-02 |
+| `src/lib.rs` hoje é só `pub const VERSION`; nenhum encoder existe | nenhum critério desta spec pode ser verificado ainda | E21-01 a E21-09 |
 | A decisão de qual implementação de MP3/AAC entra na build depende do inventário de licenças | MP3 pode ficar `Absent` em todas as builds públicas | E11-03 |
 | Validar a saída exige `vynamp-decode` como dev-dependency, inclusive o adapter Opus ainda planejado | AC-03 para Opus só fecha depois do adapter | E01-07 |
 | Qualidade perceptual não tem oráculo numérico | relatório só pode declará-la como estimativa | fora desta spec |
