@@ -164,8 +164,9 @@ Os rótulos da coluna “REQ de produto” são descritivos; o ID de produto cor
 > enquadramento desta spec. `ENCODE-AC-01` cobre só o AC-1 daquela TASK; estes dois
 > fecham o AC-2 e o AC-3, que não tinham linha aqui.
 
-**Nenhum destes testes existe ainda.** O nome é o compromisso; a TASK citada em §4 é
-quem os escreve, e o teste nasce vermelho antes da implementação.
+**AC-01, AC-10 e AC-11 têm teste desde 2026-11-15**, em `tests/registry.rs` e
+`tests/build.rs` (TASK-E21-01). Os demais não existem ainda: o nome é o compromisso, a
+TASK citada em §4 é quem os escreve, e o teste nasce vermelho antes da implementação.
 
 ### Critérios que esta spec **não** fixa
 
@@ -242,7 +243,8 @@ Limitação declarada não reprova a entrega; limitação omitida reprova.
 
 | Limitação | Efeito | Quem cobre |
 |---|---|---|
-| `src/lib.rs` hoje é só `pub const VERSION`; nenhum encoder existe | nenhum critério desta spec pode ser verificado ainda | E21-01 a E21-09 |
+| Nenhum encoder existe: `Registry::with_builtin()` devolve os oito formatos como `Absent`, cada um com o motivo | AC-01 e AC-10 são verificáveis e passam; AC-02 a AC-09 dependem de encoder e continuam sem verificação | E21-02 a E21-09 |
 | A decisão de qual implementação de MP3/AAC entra na build depende do inventário de licenças | MP3 pode ficar `Absent` em todas as builds públicas | E11-03 |
 | Validar a saída exige `vynamp-decode` como dev-dependency, inclusive o adapter Opus ainda planejado | AC-03 para Opus só fecha depois do adapter | E01-07 |
 | Qualidade perceptual não tem oráculo numérico | relatório só pode declará-la como estimativa | fora desta spec |
+| `vynamp-dsp` está declarado e preso à feature `resample`, mas nenhum código desta lib o consome ainda | a dependência existe para o AC-11 e para E21-12; até lá, ligar `resample` só acrescenta o crate ao grafo, sem mudar comportamento | E21-12 |

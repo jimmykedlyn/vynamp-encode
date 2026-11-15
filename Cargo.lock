@@ -3,5 +3,13 @@
 version = 4
 
 [[package]]
+name = "vynamp_dsp"
+version = "0.1.0"
+source = "git+https://github.com/jimmykedlyn/vynamp-dsp?rev=3733ae83d4eb8581f563a9a163d5414a1ff4f113#3733ae83d4eb8581f563a9a163d5414a1ff4f113"
+
+[[package]]
 name = "vynamp_encode"
 version = "0.1.0"
+dependencies = [
+ "vynamp_dsp",
+]

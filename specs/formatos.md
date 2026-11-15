@@ -125,8 +125,10 @@ Os rótulos da coluna “REQ de produto” são descritivos; o ID de produto cor
 | FMT-AC-06 | os 8 valores de `Format` | `is_lossy` e `extension` são lidos | Opus, Mp3, Aac e Vorbis são lossy, os outros quatro não; as extensões batem com §3 |
 | FMT-AC-07 | um plano que pede DSF ou DFF como saída | o converter tenta montar `EncodeParams` | não existe variante `Format` para DSD e o parsing do formato devolve erro de uso |
 
-**Nenhum destes testes existe ainda.** O nome é o compromisso; a TASK citada em §4 é
-quem os escreve, e o teste nasce vermelho antes da implementação.
+**FMT-AC-06 tem teste desde 2026-11-15**, no primeiro teste de `tests/registry.rs`, que
+confere extensão e rótulo lossy dos oito formatos contra a matriz transcrita à mão
+(TASK-E21-01). Os demais não existem ainda: o nome é o compromisso, a TASK citada em §4
+é quem os escreve, e o teste nasce vermelho antes da implementação.
 
 ### Critérios que esta spec **não** fixa
 
@@ -182,6 +184,6 @@ Limitação declarada não reprova a entrega; limitação omitida reprova.
 
 | Limitação | Efeito | Quem cobre |
 |---|---|---|
-| Nenhum tipo desta spec existe em `src/` | nenhum critério verificável hoje | E21-10 a E21-16 |
+| `Format` e `Availability` existem em `src/`; `EncodeParams`, `Rate`, `SampleFormat`, `Degradation` e `validate` não | FMT-AC-06 é verificável e passa; FMT-AC-01 a FMT-AC-05 e FMT-AC-07 continuam sem verificação | E21-10 a E21-16 |
 | Sem a feature `resample`, toda mudança de taxa é recusada | build mínima só converte mantendo a taxa | decisão de build em E21-12 |
 | Opus codifica internamente a 48 kHz; outra taxa pedida passa por resample | o plano declara a mudança mesmo quando o usuário não pediu taxa | registrado em `degradations` |
