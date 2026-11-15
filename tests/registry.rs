@@ -69,10 +69,13 @@ const MATRIZ: [Row; 8] = [
 
 /// As oito variantes de `Format`, uma por linha da matriz, na mesma ordem.
 ///
-/// Lista literal de propósito: é a segunda cópia independente da enumeração, e
-/// é ela que pega uma variante a mais ou a menos em `Format` que a matriz não
-/// conheça. Se alguém remover uma variante do enum, esta lista para de compilar;
-/// se alguém acrescentar uma, o `assert_eq!` de cardinalidade abaixo reprova.
+/// Lista literal de propósito: é a segunda cópia independente da enumeração.
+/// Remover uma variante do enum faz esta lista parar de compilar. Acrescentar
+/// uma variante **não** é pego por este arquivo: `FORMATOS` tem tamanho fixo e o
+/// `assert_eq!` de cardinalidade compara `formats()` com `MATRIZ`, nunca com o
+/// enum. Quem pega a variante nova é o `const` de `src/registry.rs` que faz
+/// `match` exaustivo sobre `Format` e não compila enquanto todas as variantes
+/// não estiverem listadas — e listar é o passo em que se lembra de pôr em `ALL`.
 const FORMATOS: [Format; 8] = [
     Format::Flac,
     Format::Wav,
@@ -100,6 +103,22 @@ fn os_oito_formatos_aparecem_com_disponibilidade_nao_vazia() {
         enumerados.len(),
         MATRIZ.len()
     );
+
+    // A enumeração é finita e não repete formato: os oito da matriz, cada um
+    // uma vez. Um `formats()` que devolvesse o mesmo formato duas vezes passaria
+    // no laço abaixo — que compara posição a posição e não olha o conjunto —, e
+    // falha aqui, porque este bloco olha o que `formats()` devolveu. Vem antes do
+    // laço de propósito: na ordem inversa, uma repetição que também trocasse a
+    // ordem reprovaria pela mensagem de posição, e este bloco nunca seria
+    // exercitado.
+    for (indice, (formato, _)) in enumerados.iter().enumerate() {
+        for (outro_indice, (outro, _)) in enumerados.iter().enumerate().skip(indice + 1) {
+            assert_ne!(
+                formato, outro,
+                "formats() repetiu {formato:?} nas posições {indice} e {outro_indice}"
+            );
+        }
+    }
 
     for (indice, (formato, disponibilidade)) in enumerados.iter().enumerate() {
         let linha = &MATRIZ[indice];
@@ -139,17 +158,18 @@ fn os_oito_formatos_aparecem_com_disponibilidade_nao_vazia() {
                     "{}: Absent com reason vazio",
                     linha.name
                 );
+                // O texto é o que o relatório do converter mostra ao usuário
+                // (`encode.md` §3): ele tem de nomear o formato que falta. Sem
+                // isto, WAV respondendo "encoder FLAC não está nesta build"
+                // passaria — `reason` só seria não vazio.
+                assert!(
+                    reason.contains(linha.name),
+                    "{}: Absent com reason que não nomeia o formato: {reason:?}",
+                    linha.name
+                );
             }
         }
     }
-
-    // A enumeração é finita e não repete formato: os oito da matriz, cada um
-    // uma vez. Um `formats()` que devolvesse o mesmo formato duas vezes passaria
-    // no laço acima e falharia aqui.
-    let mut vistos = FORMATOS.to_vec();
-    vistos.sort_by_key(|f| format!("{f:?}"));
-    vistos.dedup();
-    assert_eq!(vistos.len(), MATRIZ.len(), "formats() repetiu um formato");
 }
 
 /// `TASK-E21-01-AC-2` / `ENCODE-AC-10`: `availability(f)` devolve, para cada um

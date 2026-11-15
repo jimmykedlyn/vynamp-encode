@@ -25,7 +25,8 @@ pub enum Format {
     Alac,
     /// Opus, lossy, `.opus`.
     Opus,
-    /// MP3, lossy, `.mp3`. Só existe quando o encoder está na build.
+    /// MP3, lossy, `.mp3`. A variante sempre existe; o que depende da build é a
+    /// disponibilidade (`Availability::Absent` sem o encoder — ENCODE-REQ-02).
     Mp3,
     /// AAC em MP4, lossy, `.m4a`.
     Aac,

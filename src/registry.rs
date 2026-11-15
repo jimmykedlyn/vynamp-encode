@@ -42,13 +42,34 @@ const ALL: [Format; 8] = [
     Format::Vorbis,
 ];
 
+/// Quantas variantes [`Format`] tem, contado por `match` exaustivo.
+///
+/// É a garantia de que uma variante nova não passa despercebida: sem braço para
+/// ela, este `match` não compila. E o `assert` abaixo amarra a contagem a
+/// [`ALL`], então acrescentar a variante ao enum e esquecer de listá-la em `ALL`
+/// também não compila — o formato novo não pode existir sem ser enumerado.
+const VARIANT_COUNT: usize = match Format::Flac {
+    Format::Flac
+    | Format::Wav
+    | Format::Aiff
+    | Format::Alac
+    | Format::Opus
+    | Format::Mp3
+    | Format::Aac
+    | Format::Vorbis => 8,
+};
+
+const _: () = assert!(ALL.len() == VARIANT_COUNT);
+
 /// Registry de encoders desta build.
 ///
 /// Construído por [`Registry::with_builtin`]; não há outro construtor, porque a
 /// disponibilidade é propriedade da compilação e não de um argumento.
 pub struct Registry {
     /// Impede a construção fora deste módulo: só `with_builtin` monta um
-    /// registry, e é ele que consulta a build.
+    /// registry. Hoje não guarda estado — a disponibilidade é `match` sobre o
+    /// formato —, mas enquanto o campo existir o construtor é o único caminho e
+    /// a decisão de onde a build é consultada fica neste módulo.
     _private: (),
 }
 

@@ -129,7 +129,7 @@ Regras de uso que fazem parte do contrato:
 
 | ID | Requisito | REQ de produto | TASK | Teste |
 |---|---|---|---|---|
-| ENCODE-REQ-01 | `vynamp-encode` é a única fonte de encoders do produto; o registry expõe cada formato como presente ou ausente nesta build, com nome e versão do encoder — planned (M3) | encoder registry | E21-01 | — (ENCODE-AC-01 planejado) |
+| ENCODE-REQ-01 | `vynamp-encode` é a única fonte de encoders do produto; o registry expõe cada formato como presente ou ausente nesta build, com nome e versão do encoder — planned (M3) | encoder registry | E21-01 | `tests/registry.rs` (ENCODE-AC-01, desde 2026-11-15) |
 | ENCODE-REQ-02 | MP3 fica `Absent` quando o encoder não está na build, e pedir MP3 nesse caso é erro tipado, nunca troca silenciosa de formato — planned (M3) | política de codecs | E21-02, E11-03 | — (ENCODE-AC-02 planejado) |
 | ENCODE-REQ-03 | Formatos lossy declaram no contêiner o priming e o padding do encoder, de modo que um decoder conforme recupere exatamente `frames_in` amostras — planned (M3) | gapless na saída | E21-03 | — (ENCODE-AC-03 planejado) |
 | ENCODE-REQ-04 | O encoder não reamostra, não muda profundidade nem remixa canais por conta própria: qualquer degradação é pedida explicitamente nos `EncodeParams` e devolvida no resumo — planned (M3) | sem degradação silenciosa | E21-04 | — (ENCODE-AC-04 planejado) |
@@ -232,10 +232,17 @@ após aplicar priming/padding, que é verificável sem métrica perceptual. Todo
 fixtures são pequenos: não há `#[ignore]`.
 
 ```
+cargo test --test registry --locked
+cargo test --test build --locked
 cargo test --test encode_contrato --locked
 cargo test --test lossless_bitexato --locked
 cargo test --test gapless_lossy --locked
 ```
+
+`registry` e `build` são os dois que existem hoje (TASK-E21-01): o primeiro confere a
+matriz de `formatos.md` §3 contra `formats()` e `availability()`; o segundo prova o
+AC-11 pelo `cargo tree --edges normal,build` e pelo `cargo metadata` do próprio
+manifesto. Os três seguintes nascem com as TASKs que os citam em §4.
 
 ## 10. Limitações conhecidas
 
