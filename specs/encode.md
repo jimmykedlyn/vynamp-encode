@@ -7,7 +7,7 @@
 | Tipo | lib |
 | Versão da spec | 0.2.0 |
 | Data | 2026-11-11 |
-| Estado | **rascunho autorado, não aprovado** — §3 a §6, §9 e §10 escritos a partir de `reference/tools/02-vynamp-converter.md` §1 a §6 e das TASKs E21-01 a E21-09, E08-02, E11-03 e E10-03. A aprovação é do mantenedor, por `GOVERNANCE.md` |
+| Estado | **§5 aprovada em 2026-11-15** pelo mantenedor, na abertura da `TASK-E21-01`. As demais seções seguem rascunho autorado a partir de `reference/tools/02-vynamp-converter.md` §1 a §6 e das TASKs E21-01 a E21-09, E08-02, E11-03 e E10-03: §3, §4, §6, §9 e §10 não foram aprovadas e não devem ser lidas como contrato. A aprovação é do mantenedor, por `GOVERNANCE.md` |
 | Dono | mantenedor do `vynamp-encode` |
 | Depende de | `vynamp-dsp` (opcional, feature `resample`) |
 | É dependido por | engine; converter |
@@ -159,10 +159,10 @@ Os rótulos da coluna “REQ de produto” são descritivos; o ID de produto cor
 | ENCODE-AC-11 | o repo `vynamp-encode` recém-compilado no perfil padrão, com `Cargo.lock` versionado e sem feature extra ligada | `cargo tree` e `cargo metadata` são lidos e conferidos contra a lista de dependências declaradas no `Cargo.toml` | a build padrão não carrega crate de encoder de terceiro, e `vynamp-dsp` aparece só atrás da feature `resample`, desligada por padrão (TASK-E21-01-AC-3) |
 
 > `ENCODE-AC-10` e `ENCODE-AC-11` foram autorados em 2026-11-15 a partir de
-> `TASK-E21-01` e **não estão aprovados**. O `Then` de cada linha é o critério
-> aprovado no backlog, copiado literal; `Given` e `When` são o enquadramento desta
-> spec. `ENCODE-AC-01` cobre só o AC-1 daquela TASK; estes dois fecham o AC-2 e o
-> AC-3, que não tinham linha aqui.
+> `TASK-E21-01` e **aprovados pelo mantenedor no mesmo dia**. O `Then` de cada
+> linha é o critério aprovado no backlog, copiado literal; `Given` e `When` são o
+> enquadramento desta spec. `ENCODE-AC-01` cobre só o AC-1 daquela TASK; estes dois
+> fecham o AC-2 e o AC-3, que não tinham linha aqui.
 
 **Nenhum destes testes existe ainda.** O nome é o compromisso; a TASK citada em §4 é
 quem os escreve, e o teste nasce vermelho antes da implementação.
