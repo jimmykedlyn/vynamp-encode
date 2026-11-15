@@ -10,7 +10,7 @@
 | Módulo dono | `vynamp-encode` |
 | Repo | `jimmykedlyn/vynamp-encode` |
 | REQ coberto | `REQ-E21-01` |
-| Critérios da spec | `specs/encode.md` §4 e §5 (ENCODE-AC-01) |
+| Critérios da spec | `specs/encode.md` §4 e §5 (`ENCODE-AC-01`, `ENCODE-AC-10`, `ENCODE-AC-11` — rascunho não aprovado) |
 | Fase | M3 |
 | Prioridade | P0 |
 | Estado | planned |

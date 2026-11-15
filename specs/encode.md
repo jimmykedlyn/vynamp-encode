@@ -155,6 +155,14 @@ Os rótulos da coluna “REQ de produto” são descritivos; o ID de produto cor
 | ENCODE-AC-07 | um `sink` de teste que devolve `io::ErrorKind::StorageFull` na metade | a sessão escreve até o erro | volta `Err(EncodeError::Io{kind: StorageFull, ..})`, sem pânico |
 | ENCODE-AC-08 | `Metadata` com título, artista, um campo desconhecido `X-FOO` e capa JPEG, destino WAV | `set_metadata` é chamado e a sessão termina | título e artista estão em `written`; os campos que o WAV/LIST-INFO não comporta estão em `dropped` com motivo; o arquivo de áudio é válido |
 | ENCODE-AC-09 | um FLAC 24 bits 96 kHz codificado em Opus 256 kbps | o `EncodeSummary` é lido | `lossy == true` e nenhum campo do resumo contém “hi-res” ou “lossless” |
+| ENCODE-AC-10 | o mesmo registry de ENCODE-AC-01 e a tabela transcrita, e um laço que percorre os oito formatos separado do laço que enumera `formats()` | `availability` é chamado formato a formato e cada variante devolvida é comparada com a que `formats()` enumerou para o mesmo formato | `availability` devolve, para cada um dos oito formatos, a mesma variante que a entrada correspondente de `formats()` (TASK-E21-01-AC-2) |
+| ENCODE-AC-11 | o repo `vynamp-encode` recém-compilado no perfil padrão, com `Cargo.lock` versionado e sem feature extra ligada | `cargo tree` e `cargo metadata` são lidos e conferidos contra a lista de dependências declaradas no `Cargo.toml` | a build padrão não carrega crate de encoder de terceiro, e `vynamp-dsp` aparece só atrás da feature `resample`, desligada por padrão (TASK-E21-01-AC-3) |
+
+> `ENCODE-AC-10` e `ENCODE-AC-11` foram autorados em 2026-11-15 a partir de
+> `TASK-E21-01` e **não estão aprovados**. O `Then` de cada linha é o critério
+> aprovado no backlog, copiado literal; `Given` e `When` são o enquadramento desta
+> spec. `ENCODE-AC-01` cobre só o AC-1 daquela TASK; estes dois fecham o AC-2 e o
+> AC-3, que não tinham linha aqui.
 
 **Nenhum destes testes existe ainda.** O nome é o compromisso; a TASK citada em §4 é
 quem os escreve, e o teste nasce vermelho antes da implementação.
