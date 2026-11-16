@@ -7,7 +7,7 @@
 | Tipo | lib |
 | Versão da spec | 0.2.0 |
 | Data | 2026-11-11 |
-| Estado | **rascunho autorado, não aprovado** — §3 a §6, §9 e §10 escritos a partir de `reference/tools/02-vynamp-converter.md` §1 a §6 e das TASKs E21-01 a E21-09, E08-02, E11-03 e E10-03. A aprovação é do mantenedor, por `GOVERNANCE.md` |
+| Estado | **§5 aprovada em 2026-11-15** pelo mantenedor, na abertura da `TASK-E21-01`. As demais seções seguem rascunho autorado a partir de `reference/tools/02-vynamp-converter.md` §1 a §6 e das TASKs E21-01 a E21-09, E08-02, E11-03 e E10-03: §3, §4, §6, §9 e §10 não foram aprovadas e não devem ser lidas como contrato. A aprovação é do mantenedor, por `GOVERNANCE.md` |
 | Dono | mantenedor do `vynamp-encode` |
 | Depende de | `vynamp-dsp` (opcional, feature `resample`) |
 | É dependido por | engine; converter |
@@ -129,7 +129,7 @@ Regras de uso que fazem parte do contrato:
 
 | ID | Requisito | REQ de produto | TASK | Teste |
 |---|---|---|---|---|
-| ENCODE-REQ-01 | `vynamp-encode` é a única fonte de encoders do produto; o registry expõe cada formato como presente ou ausente nesta build, com nome e versão do encoder — planned (M3) | encoder registry | E21-01 | — (ENCODE-AC-01 planejado) |
+| ENCODE-REQ-01 | `vynamp-encode` é a única fonte de encoders do produto; o registry expõe cada formato como presente ou ausente nesta build, com nome e versão do encoder — planned (M3) | encoder registry | E21-01 | `tests/registry.rs` (ENCODE-AC-01, desde 2026-11-15) |
 | ENCODE-REQ-02 | MP3 fica `Absent` quando o encoder não está na build, e pedir MP3 nesse caso é erro tipado, nunca troca silenciosa de formato — planned (M3) | política de codecs | E21-02, E11-03 | — (ENCODE-AC-02 planejado) |
 | ENCODE-REQ-03 | Formatos lossy declaram no contêiner o priming e o padding do encoder, de modo que um decoder conforme recupere exatamente `frames_in` amostras — planned (M3) | gapless na saída | E21-03 | — (ENCODE-AC-03 planejado) |
 | ENCODE-REQ-04 | O encoder não reamostra, não muda profundidade nem remixa canais por conta própria: qualquer degradação é pedida explicitamente nos `EncodeParams` e devolvida no resumo — planned (M3) | sem degradação silenciosa | E21-04 | — (ENCODE-AC-04 planejado) |
@@ -155,9 +155,18 @@ Os rótulos da coluna “REQ de produto” são descritivos; o ID de produto cor
 | ENCODE-AC-07 | um `sink` de teste que devolve `io::ErrorKind::StorageFull` na metade | a sessão escreve até o erro | volta `Err(EncodeError::Io{kind: StorageFull, ..})`, sem pânico |
 | ENCODE-AC-08 | `Metadata` com título, artista, um campo desconhecido `X-FOO` e capa JPEG, destino WAV | `set_metadata` é chamado e a sessão termina | título e artista estão em `written`; os campos que o WAV/LIST-INFO não comporta estão em `dropped` com motivo; o arquivo de áudio é válido |
 | ENCODE-AC-09 | um FLAC 24 bits 96 kHz codificado em Opus 256 kbps | o `EncodeSummary` é lido | `lossy == true` e nenhum campo do resumo contém “hi-res” ou “lossless” |
+| ENCODE-AC-10 | o mesmo registry de ENCODE-AC-01 e a tabela transcrita, e um laço que percorre os oito formatos separado do laço que enumera `formats()` | `availability` é chamado formato a formato e cada variante devolvida é comparada com a que `formats()` enumerou para o mesmo formato | `availability` devolve, para cada um dos oito formatos, a mesma variante que a entrada correspondente de `formats()` (TASK-E21-01-AC-2) |
+| ENCODE-AC-11 | o repo `vynamp-encode` recém-compilado no perfil padrão, com `Cargo.lock` versionado e sem feature extra ligada | `cargo tree` e `cargo metadata` são lidos e conferidos contra a lista de dependências declaradas no `Cargo.toml` | a build padrão não carrega crate de encoder de terceiro, e `vynamp-dsp` aparece só atrás da feature `resample`, desligada por padrão (TASK-E21-01-AC-3) |
 
-**Nenhum destes testes existe ainda.** O nome é o compromisso; a TASK citada em §4 é
-quem os escreve, e o teste nasce vermelho antes da implementação.
+> `ENCODE-AC-10` e `ENCODE-AC-11` foram autorados em 2026-11-15 a partir de
+> `TASK-E21-01` e **aprovados pelo mantenedor no mesmo dia**. O `Then` de cada
+> linha é o critério aprovado no backlog, copiado literal; `Given` e `When` são o
+> enquadramento desta spec. `ENCODE-AC-01` cobre só o AC-1 daquela TASK; estes dois
+> fecham o AC-2 e o AC-3, que não tinham linha aqui.
+
+**AC-01, AC-10 e AC-11 têm teste desde 2026-11-15**, em `tests/registry.rs` e
+`tests/build.rs` (TASK-E21-01). Os demais não existem ainda: o nome é o compromisso, a
+TASK citada em §4 é quem os escreve, e o teste nasce vermelho antes da implementação.
 
 ### Critérios que esta spec **não** fixa
 
@@ -223,10 +232,17 @@ após aplicar priming/padding, que é verificável sem métrica perceptual. Todo
 fixtures são pequenos: não há `#[ignore]`.
 
 ```
+cargo test --test registry --locked
+cargo test --test build --locked
 cargo test --test encode_contrato --locked
 cargo test --test lossless_bitexato --locked
 cargo test --test gapless_lossy --locked
 ```
+
+`registry` e `build` são os dois que existem hoje (TASK-E21-01): o primeiro confere a
+matriz de `formatos.md` §3 contra `formats()` e `availability()`; o segundo prova o
+AC-11 pelo `cargo tree --edges normal,build` e pelo `cargo metadata` do próprio
+manifesto. Os três seguintes nascem com as TASKs que os citam em §4.
 
 ## 10. Limitações conhecidas
 
@@ -234,7 +250,8 @@ Limitação declarada não reprova a entrega; limitação omitida reprova.
 
 | Limitação | Efeito | Quem cobre |
 |---|---|---|
-| `src/lib.rs` hoje é só `pub const VERSION`; nenhum encoder existe | nenhum critério desta spec pode ser verificado ainda | E21-01 a E21-09 |
+| Nenhum encoder existe: `Registry::with_builtin()` devolve os oito formatos como `Absent`, cada um com o motivo | AC-01 e AC-10 são verificáveis e passam; AC-02 a AC-09 dependem de encoder e continuam sem verificação | E21-02 a E21-09 |
 | A decisão de qual implementação de MP3/AAC entra na build depende do inventário de licenças | MP3 pode ficar `Absent` em todas as builds públicas | E11-03 |
 | Validar a saída exige `vynamp-decode` como dev-dependency, inclusive o adapter Opus ainda planejado | AC-03 para Opus só fecha depois do adapter | E01-07 |
 | Qualidade perceptual não tem oráculo numérico | relatório só pode declará-la como estimativa | fora desta spec |
+| `vynamp-dsp` está declarado e preso à feature `resample`, mas nenhum código desta lib o consome ainda | a dependência existe para o AC-11 e para E21-12; até lá, ligar `resample` só acrescenta o crate ao grafo, sem mudar comportamento | E21-12 |

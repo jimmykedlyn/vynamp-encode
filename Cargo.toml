@@ -8,6 +8,26 @@ license = "MIT OR Apache-2.0"
 publish = false
 
 [dependencies]
+# Opcional de proposito: a build padrao do encoder nao reamostra, e o crate de
+# encoder nao entra por tabela (formatos.md §3, ENCODE-AC-11). Quem liga a
+# feature `resample` e quem pede conversao de taxa, em TASK-E21-12.
+#
+# Preso por `rev` e nao por `tag`: a tag `v0.1.0` do vynamp-dsp aponta para o
+# commit inicial do repo, anterior ao resampler, e nao tem o que esta lib vai
+# consumir. O `rev` e o mesmo commit que o umbrella fixa em `libs/dsp`.
+vynamp_dsp = { git = "https://github.com/jimmykedlyn/vynamp-dsp", rev = "3733ae83d4eb8581f563a9a163d5414a1ff4f113", optional = true }
+
+[dev-dependencies]
+# So para o teste de AC-11 ler o `cargo metadata` como objeto em vez de casar
+# texto: `contains` sobre o manifesto casa com comentario e so reconhece uma
+# grafia. Nao entra na build padrao nem no grafo de producao (dev-dependency).
+serde_json = "1"
+
+[features]
+# Desligada por padrao: sem ela, o grafo de dependencias normais deste crate e
+# so ele mesmo.
+default = []
+resample = ["dep:vynamp_dsp"]
 
 [lib]
 name = "vynamp_encode"

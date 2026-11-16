@@ -10,7 +10,7 @@
 | Módulo dono | `vynamp-encode` |
 | Repo | `jimmykedlyn/vynamp-encode` |
 | REQ coberto | `REQ-E21-01` |
-| Critérios da spec | `specs/encode.md` §4 e §5 (ENCODE-AC-01) |
+| Critérios da spec | `specs/encode.md` §4 e §5 (`ENCODE-AC-01`, `ENCODE-AC-10`, `ENCODE-AC-11` — aprovados em 2026-11-15) |
 | Fase | M3 |
 | Prioridade | P0 |
 | Estado | planned |
@@ -68,3 +68,36 @@
 ## Notas de execução
 
 Preenchido durante a execução, não antes.
+
+### 2026-11-15 — implementação
+
+**Base da branch.** `05635ed` (`docs(encode): aprovar ENCODE-AC-10 e 11`), não
+`origin/develop`: a `develop` publicada ainda tem `specs/encode.md` como rascunho não
+aprovado e não tem ENCODE-AC-10/11. O commit da aprovação existia só no checkout
+`libs/encode` da worktree do umbrella; foi trazido para este repo por
+`git fetch <caminho-da-worktree> chore/claude-specs-e21-01-encode`, sem tocar na
+worktree de outra sessão.
+
+**Decisão de build: `rev`, não `tag`.** A tag `v0.1.0` do `vynamp-dsp` (`c2b1aa7`) é o
+esqueleto inicial do repo — só `pub const VERSION`, sem resampler. Pinar por tag daria
+uma dependência que compila e não serve para E21-12. O `Cargo.toml` prende
+`rev = "3733ae83d4eb8581f563a9a163d5414a1ff4f113"`, que é o mesmo commit que o umbrella
+fixa em `libs/dsp`. Quando o `vynamp-dsp` receber tag com o resampler, trocar `rev` por
+`tag` é edição de uma linha, em TASK-E21-12.
+
+**Dependência declarada e ainda não consumida.** `vynamp_dsp` não é referenciado por
+nenhum código desta lib: esta TASK só prova que ele entra e sai do grafo pela feature.
+Isso está registrado em `specs/encode.md` §10, e é o que E21-12 fecha. `cargo build` e
+`cargo clippy` não reclamam de dependência opcional não usada — medido nas duas
+configurações de feature. `cargo machete` não vem no toolchain desta máquina; o CI de
+módulo já trata ausência como registro, não portão.
+
+**Ambiente.** O `CARGO_HOME` padrão do runner é `/paperclip/toolchain/cargo`, `root:root`,
+e não aceita criar `git/db`; `cargo` com dependência git só rodou com
+`CARGO_HOME=/tmp/cargohome`. No CI (Ubuntu, runner próprio) o problema não existe.
+
+**Revisão por mutação.** Cada asserção foi provada reprovando o dano que ela existe para
+pegar: formato removido da enumeração, ordem trocada, `Present`/`Absent` com campo vazio,
+`formats()` discordando de `availability()`, crate de encoder na build padrão,
+`default = ["resample"]`. Todas as seis mutações foram revertidas; a árvore final é a que
+passa nos portões.
