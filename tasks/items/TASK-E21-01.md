@@ -92,7 +92,7 @@ Isso está registrado em `specs/encode.md` §10, e é o que E21-12 fecha. `cargo
 configurações de feature. `cargo machete` não vem no toolchain desta máquina; o CI de
 módulo já trata ausência como registro, não portão.
 
-**Ambiente.** O `CARGO_HOME` padrão do runner é `/paperclip/toolchain/cargo`, `root:root`,
+**Ambiente.** (Histórico: runner do Paperclip, desativado em 2026-11-21.) O `CARGO_HOME` padrão do runner era `/paperclip/toolchain/cargo`, `root:root`,
 e não aceita criar `git/db`; `cargo` com dependência git só rodou com
 `CARGO_HOME=/tmp/cargohome`. No CI (Ubuntu, runner próprio) o problema não existe.
 

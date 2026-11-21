@@ -22,6 +22,7 @@ Todas de produto; as de engenharia moram no umbrella.
 | `TASK-E21-15` | Ser a fonte única do rótulo lossy e da extensão | vynamp-encode | planned |
 | `TASK-E21-16` | Não oferecer saída DSD | vynamp-encode | planned |
 
-O status oficial é o `tasks/backlog.json` do umbrella. O índice de épico fica lá
-também: uma cópia por repo divergiria.
+O status oficial vive na base **TASKs** do Notion (`AGENTS.md` §7 do umbrella); o
+`tasks/backlog.json` do umbrella guarda a spec e o índice de épico. Uma cópia por repo
+divergiria.
 Estados conferidos contra o backlog em 2026-11-12.
